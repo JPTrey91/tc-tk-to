@@ -9,6 +9,10 @@
     board.markSlot(slot);
     board = board.refresh();
   };
+
+  const handleBoardReset = () => {
+    board = new Board();
+  };
 </script>
 
 <main
@@ -31,6 +35,8 @@
   {:else}
     <h1>{board.getCurrentPlayerMark()}'s turn</h1>
   {/if}
+
+  <button on:click={handleBoardReset}>Reset</button>
 </main>
 
 <style>

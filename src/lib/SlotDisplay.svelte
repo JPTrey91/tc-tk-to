@@ -16,7 +16,7 @@
 
 <button
   class:winningSlot={slot.isWinning}
-  on:click|once={handleClick}
+  on:click={handleClick}
   disabled={slot.isMarked}
 >
   {slot.value}
