@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Slot, { SlotValues } from "./Slot";
-  import { preprocess } from "svelte/compiler";
 
   export let slot: Slot;
 

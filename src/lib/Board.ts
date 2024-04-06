@@ -14,8 +14,10 @@ class Board {
     this._turnCount = 1;
     this._winner = null;
     this._isDraw = false;
-    this._boardWidth = parseInt(import.meta.env.VITE_BOARD_WIDTH ?? 3);
-    this._boardHeight = parseInt(import.meta.env.VITE_BOARD_HEIGHT ?? 3);
+    this._boardWidth =
+      parseInt(import.meta.env.VITE_BOARD_WIDTH as string) ?? 3;
+    this._boardHeight =
+      parseInt(import.meta.env.VITE_BOARD_HEIGHT as string) ?? 3;
 
     for (let x = 0; x < this._boardWidth; x++) {
       this._boardArr[x] = [];
