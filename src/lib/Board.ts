@@ -1,5 +1,5 @@
-import Slot from "./Slot";
-import { SlotValues } from "./Slot";
+import type { BoardState } from "./Interfaces";
+import Slot, { SlotValues } from "./Slot";
 
 class Board {
   private _boardArr: Slot[][];
@@ -14,8 +14,8 @@ class Board {
     this._turnCount = 1;
     this._winner = null;
     this._isDraw = false;
-    this._boardWidth = parseInt(import.meta.env.VITE_BOARD_WIDTH);
-    this._boardHeight = parseInt(import.meta.env.VITE_BOARD_HEIGHT);
+    this._boardWidth = parseInt(import.meta.env.VITE_BOARD_WIDTH ?? 3);
+    this._boardHeight = parseInt(import.meta.env.VITE_BOARD_HEIGHT ?? 3);
 
     for (let x = 0; x < this._boardWidth; x++) {
       this._boardArr[x] = [];
@@ -23,6 +23,23 @@ class Board {
         this._boardArr[x][y] = new Slot(x, y, false, SlotValues.empty);
       }
     }
+  }
+
+  static createBoardFromBoardState(boardState: BoardState): Board {
+    const board = new Board();
+    boardState._boardArr.map((row, rowIndex) => {
+      row.map((slot, slotIndex) => {
+        if (slot._occupied) {
+          board.markSlotWithCoordinates(
+            rowIndex,
+            slotIndex,
+            slot._value as SlotValues
+          );
+        }
+      });
+    });
+
+    return board;
   }
 
   public getBoard(): Slot[][] {
@@ -63,7 +80,7 @@ class Board {
     return this;
   }
 
-  getSlot(xCoordinate: number, yCoordinate: number) {
+  getSlot(xCoordinate: number, yCoordinate: number): Slot {
     return this._boardArr[xCoordinate][yCoordinate];
   }
 
@@ -80,6 +97,15 @@ class Board {
       this.incrementTurn();
       this.isGameOver();
     }
+  }
+
+  markSlotWithCoordinates(
+    xCoordinate: number,
+    yCoordinate: number,
+    forcedMark?: SlotValues
+  ) {
+    const slot: Slot = this.getSlot(xCoordinate, yCoordinate);
+    this.markSlot(slot, forcedMark);
   }
 
   incrementTurn(): void {
@@ -181,6 +207,10 @@ class Board {
         });
       });
     }
+  }
+
+  getTurnCount(): number {
+    return this._turnCount;
   }
 }
 
