@@ -14,8 +14,12 @@ const io = new Server(server, {
   },
 });
 
+let playerCount: number;
+
 io.on("connection", (socket) => {
   console.log("A client connected");
+
+  socket.emit("receivePlayerNumber", (++playerCount % 2) + 1);
 
   socket.on("sendMove", (data: string) => {
     const { move, boardState } = JSON.parse(data) as MoveRequest;
@@ -38,4 +42,5 @@ io.on("connection", (socket) => {
 
 server.listen(PORT, () => {
   console.log("Server listening on port", PORT);
+  playerCount = 0;
 });
