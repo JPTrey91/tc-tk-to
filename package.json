@@ -17,5 +17,13 @@
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
-  }
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
+  },
+  "description": "This template should help get you started developing with Svelte and TypeScript in Vite.",
+  "main": "svelte.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

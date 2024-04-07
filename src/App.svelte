@@ -1,17 +1,48 @@
 <script lang="ts">
   import Board from "./lib/Board";
+  import type { BoardState, Move, MoveRequest } from "./lib/Interfaces";
   import type Slot from "./lib/Slot";
+  import { SlotValues } from "./lib/Slot";
   import SlotDisplay from "./lib/SlotDisplay.svelte";
+  import { io } from "socket.io-client";
 
   let board = new Board();
+  let playerNumber: number;
+
+  // WebSocket setup
+  const socket = io("ws://localhost:8080", {});
+
+  socket.on("receivePlayerNumber", (data: number) => {
+    playerNumber = data;
+  });
+
+  socket.on("receiveBoard", (data: Board) => {
+    const boardState: BoardState = JSON.parse(JSON.stringify(data));
+    const newBoard = Board.createBoardFromBoardState(boardState);
+    board = newBoard;
+  });
+
+  const isBoardClickable = () => {
+    return !board.isGameOver() && board.getTurnCount() % 2 === playerNumber - 1;
+  };
 
   const handleSlotClicked = (slot: Slot) => {
-    board.markSlot(slot);
-    board = board.refresh();
+    if (isBoardClickable()) {
+      const data: MoveRequest = {
+        move: {
+          marker: board.getCurrentPlayerMark(),
+          xCoordinate: slot.positionX,
+          yCoordinate: slot.positionY,
+        },
+        boardState: JSON.parse(JSON.stringify(board)) as BoardState,
+      };
+
+      socket.emit("sendMove", JSON.stringify(data));
+    }
   };
 
   const handleBoardReset = () => {
-    board = new Board();
+    socket.emit("resetBoard");
   };
 </script>
 
@@ -37,6 +68,9 @@
   {/if}
 
   <button on:click={handleBoardReset}>Reset</button>
+
+  <h4>Turn #{board.getTurnCount()}</h4>
+  <h3>You are {(playerNumber - 1) % 2 ? SlotValues.x : SlotValues.o}</h3>
 </main>
 
 <style>
