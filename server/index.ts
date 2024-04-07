@@ -1,12 +1,11 @@
-import express from "express";
-import { createServer } from "node:http";
+const express = require("express");
 import { Server } from "socket.io";
-import Board from "../src/lib/Board";
-import type { MoveRequest } from "../src/lib/Interfaces";
+import { MoveRequest } from "./lib/Interfaces";
+import Board from "./lib/Board";
 
 const PORT: number = parseInt(process.env.PORT!) || 8080;
 const app = express();
-const server = createServer(app);
+const server = require("http").createServer(app);
 
 const io = new Server(server, {
   cors: {
