@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
 
     socket.join(`${roomNumber}`);
 
-    playerCount = io.sockets.adapter.rooms.get(roomNumber).size;
+    playerCount = io.sockets.adapter.rooms.get(`${roomNumber}`).size;
 
     console.log(`Joining room ${roomNumber} with ${playerCount} players.`);
 
