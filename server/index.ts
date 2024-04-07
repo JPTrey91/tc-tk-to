@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   socket.on("joinRoom", (data: string) => {
     const { roomNumber } = JSON.parse(data) as RoomNumberArg;
 
-    socket.join(roomNumber);
+    socket.join(`${roomNumber}`);
 
     playerCount = io.sockets.adapter.rooms.get(roomNumber).size;
 
@@ -40,15 +40,15 @@ io.on("connection", (socket) => {
     const board: Board = Board.createBoardFromBoardState(boardState);
     board.markSlotWithCoordinates(move.xCoordinate, move.yCoordinate);
 
-    io.to(roomNumber).emit("receiveBoard", board);
+    io.to(`${roomNumber}`).emit("receiveBoard", board);
   });
 
   socket.on("resetBoard", (data: string) => {
     const { roomNumber } = JSON.parse(data);
     const board: Board = new Board();
 
-    io.to(roomNumber).emit("receiveBoard", board);
-    io.to(roomNumber).emit("swapPlayers");
+    io.to(`${roomNumber}`).emit("receiveBoard", board);
+    io.to(`${roomNumber}`).emit("swapPlayers");
   });
 
   socket.on("disconnect", () => {
