@@ -32,6 +32,7 @@ io.on("connection", (socket) => {
     const board: Board = new Board();
 
     io.emit("receiveBoard", board);
+    io.emit("swapPlayers");
   });
 
   socket.on("disconnect", () => {
