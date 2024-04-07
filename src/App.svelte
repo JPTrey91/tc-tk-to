@@ -10,7 +10,7 @@
   let playerNumber: number;
 
   // WebSocket setup
-  const socket = io("ws://localhost:8080", {});
+  const socket = io(import.meta.env.VITE_WS_ENDPOINT, {});
 
   socket.on("receivePlayerNumber", (data: number) => {
     playerNumber = data;
