@@ -7,6 +7,7 @@
 
   export let board: Board;
   export let playerNumber: number;
+  export let roomNumber: number;
 
   const dispatch = createEventDispatcher();
 
@@ -44,6 +45,7 @@
 
   <h4>Turn #{board.getTurnCount()}</h4>
   <h3>You are {(playerNumber - 1) % 2 ? SlotValues.x : SlotValues.o}</h3>
+  <h3>Room #{roomNumber}</h3>
 </div>
 
 <style preprocess="scss">

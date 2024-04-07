@@ -1,8 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { preprocess } from "svelte/compiler";
 
-  let roomNumber = 0;
+  let roomNumber = 1;
   let isConnecting = false;
   const dispatch = createEventDispatcher();
 
@@ -16,7 +15,7 @@
 <form on:submit={(e) => handleSubmit(e)} class:isConnecting>
   <label
     >Room #
-    <input type="number" placeholder="Room #" value={roomNumber} />
+    <input type="number" placeholder="Room #" bind:value={roomNumber} min="1" />
   </label>
   <button type="submit">Connect{isConnecting ? "ing..." : ""}</button>
 </form>

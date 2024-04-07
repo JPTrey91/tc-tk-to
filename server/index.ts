@@ -15,24 +15,40 @@ const io = new Server(server, {
 
 let playerCount: number;
 
+interface RoomNumberArg {
+  roomNumber: number;
+}
+
 io.on("connection", (socket) => {
   console.log("A client connected");
 
-  socket.emit("receivePlayerNumber", (++playerCount % 2) + 1);
+  socket.on("joinRoom", (data: string) => {
+    const { roomNumber } = JSON.parse(data) as RoomNumberArg;
+
+    socket.join(roomNumber);
+
+    playerCount = io.sockets.adapter.rooms.get(roomNumber).size;
+
+    console.log(`Joining room ${roomNumber} with ${playerCount} players.`);
+
+    socket.emit("receivePlayerNumber", ++playerCount % 2);
+    socket.emit("receiveRoomNumber", roomNumber);
+  });
 
   socket.on("sendMove", (data: string) => {
-    const { move, boardState } = JSON.parse(data) as MoveRequest;
+    const { move, boardState, roomNumber } = JSON.parse(data) as MoveRequest;
     const board: Board = Board.createBoardFromBoardState(boardState);
     board.markSlotWithCoordinates(move.xCoordinate, move.yCoordinate);
 
-    io.emit("receiveBoard", board);
+    io.to(roomNumber).emit("receiveBoard", board);
   });
 
-  socket.on("resetBoard", () => {
+  socket.on("resetBoard", (data: string) => {
+    const { roomNumber } = JSON.parse(data);
     const board: Board = new Board();
 
-    io.emit("receiveBoard", board);
-    io.emit("swapPlayers");
+    io.to(roomNumber).emit("receiveBoard", board);
+    io.to(roomNumber).emit("swapPlayers");
   });
 
   socket.on("disconnect", () => {

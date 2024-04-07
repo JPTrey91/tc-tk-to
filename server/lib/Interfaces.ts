@@ -21,4 +21,5 @@ export interface Move {
 export interface MoveRequest {
   move: Move;
   boardState: BoardState;
+  roomNumber: number;
 }

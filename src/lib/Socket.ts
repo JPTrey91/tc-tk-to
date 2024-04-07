@@ -4,10 +4,12 @@ import type Board from "./Board";
 interface ServerToClientEvents {
   receivePlayerNumber: () => number;
   receiveBoard: () => Board;
+  receiveRoomNumber: () => number;
 }
 
 interface ClientToServerEvents {
   sendMove: (data: string) => void;
+  joinRoom: (data: string) => void;
 }
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io();
